@@ -1,7 +1,7 @@
 export const Modal = () => {
     return (
-        <div className="overlay">
-  <div className="modal">
+        <div >
+  <div>
     <img src={<></>} alt={<></>} />
   </div>
 </div>
