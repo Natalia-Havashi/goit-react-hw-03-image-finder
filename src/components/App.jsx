@@ -1,11 +1,11 @@
 import { Component } from "react";
 // import { Button } from "./Button/Button";
-// // import { ImageGalleryItem } from "./ImageGalleryItem/ImageGalleryItem";
 // import { Loader } from "./Loader/Loader";
 // import { Modal } from "./Modal/Modal";
 
 import ImageGallery from "./ImageGallery/ImageGallery";
-import Searchbar from "./Searchbar/Searchbar";
+// import Searchbar from "./Searchbar/Searchbar";
+
 
 class App extends Component {
 
@@ -21,10 +21,10 @@ class App extends Component {
         color: '#010101'
       }}
     >
-      <Searchbar/>
+      {/* <Searchbar/> */}
       <ImageGallery />
-      {/* <ImageGalleryItem /> */}
-      {/* <Button />
+      
+     {/* <Button />
       <Loader />
      <Modal /> */}
     </div>
