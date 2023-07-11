@@ -3,7 +3,7 @@ import { MagnifyingGlass } from 'react-loader-spinner'
 export const Loader = () => {
     return (
   <MagnifyingGlass
-  visible={true}
+  // visible={true}
   height="80"
   width="80"
   ariaLabel="MagnifyingGlass-loading"
