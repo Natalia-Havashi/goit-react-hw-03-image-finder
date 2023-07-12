@@ -11,36 +11,38 @@ class App extends Component {
     per_page: 12,
     searchQuery: '',
     isLoading: false,
+    error: '',
   };
-  // handleSerch = async event => {
-  //   event.preventDefault();
-  //   const data = await getImagesSerch(event.target[0].value);
-  //   this.setState({ images: [...data.hits] });
-  // };
+
   handleSerch = event => {
     event.preventDefault();
     this.setState({ searchQuery: event.target[0].value });
   };
 
   componentDidUpdate(prevState) {
-    if (prevState.searchQuery !== this.state.searchQuery) this.apiImages();
+    if (prevState.searchQuery !== this.state.searchQuery) {
+      this.apiImages();
+    }
   }
 
   apiImages = async () => {
     try {
       this.setState({ isLoading: true });
       const data = await getImagesSerch(this.state.searchQuery);
-      this.setState({ images: [...data.images]});
+      this.setState({ images: [...data.hits]} );
+      this.setState({isLoading: false})
     } catch (error) {
-      console.log(error);
+    
+      }
     }
-  };
+  
   render() {
-    const { isLoading, images } = this.state;
+    const { isLoading, images,error } = this.state;
     return (
       <div>
         <Searchbar handleSerch={this.handleSerch} />
         {isLoading && <Loader />}
+       {error && <>..........</>}
         <ImageGallery images={images} />
       </div>
     );
