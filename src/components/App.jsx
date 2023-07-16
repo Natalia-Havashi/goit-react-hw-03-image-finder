@@ -3,50 +3,82 @@ import Searchbar from './Searchbar/Searchbar';
 import { getImagesSerch } from 'api/images';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Loader } from './Loader/Loader';
+import { Button } from './Button/Button';
+import { Modal } from './Modal/Modal';
 
-class App extends Component {
+export default class App extends Component {
   state = {
+    query: '',
     images: [],
     page: 1,
-    per_page: 12,
-    searchQuery: '',
     isLoading: false,
-    error: '',
+    modalVisible: false,
+    loadMore: false,
+    modal: null,
   };
 
-  handleSerch = event => {
-    event.preventDefault();
-    this.setState({ searchQuery: event.target[0].value });
-  };
-
-  componentDidUpdate(prevState) {
-    if (prevState.searchQuery !== this.state.searchQuery) {
-      this.apiImages();
-    }
-  }
-
-  apiImages = async () => {
-    try {
+  async componentDidUpdate(prevState, prevProps) {
+    if (
+      this.state.query !== prevState.query ||
+      this.state.page !== prevState.page
+    ) {
       this.setState({ isLoading: true });
-      const data = await getImagesSerch(this.state.searchQuery);
-      this.setState({ images: [...data.hits]} );
-      this.setState({isLoading: false})
-    } catch (error) {
-    
+      try {
+        const { hits, totalHits } = await getImagesSerch(
+          this.state.query,
+          this.state.page
+        );
+        if (hits.length === 0) {
+          alert('По вашому запиту,нічого не знайдено =(');
+        }
+        this.setState(prevState => ({
+          images: [...prevState.images, ...hits],
+          loadMore: this.setState.page < Math.ceil(totalHits / 12),
+        }));
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setState({ isLoading: false });
       }
     }
-  
+  }
+  onSubmitForm = query => {
+    this.setState(prevState => {
+      if (prevState.query === query) {
+        return null;
+      } else {
+        return { query, images: [], page: 1 };
+      }
+    });
+  };
+  modalOpen = (largeImageURL, id) => {
+    this.setState({ modal: { largeImageURL, id }, modalVisible: true });
+  };
+  modalClose = () => {
+    this.setState({ modalVisible: false, modal: null });
+  };
+
+  clickLoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
   render() {
-    const { isLoading, images,error } = this.state;
     return (
       <div>
-        <Searchbar handleSerch={this.handleSerch} />
-        {isLoading && <Loader />}
-       {error && <>..........</>}
-        <ImageGallery images={images} />
+        <Searchbar onSubmit={this.onSubmitForm} />
+        {this.state.images && (
+          <ImageGallery
+            images={this.state.images}
+            onClickImages={this.state.modalOpen}
+          />
+        )}
+        {this.state.isLoading && <Loader />}
+        {this.state.loadMore && <Button loadMore={this.clickLoadMore} />}
+        {this.state.modalVisible && (
+          <Modal modal={this.state.modal} modalClose={this.modalClose} />
+        )}
       </div>
     );
   }
 }
-
-export default App;

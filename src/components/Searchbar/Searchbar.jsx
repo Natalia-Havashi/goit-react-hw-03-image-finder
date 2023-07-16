@@ -1,14 +1,36 @@
-export const Searchbar = ({ handleChange, handleSerch }) => {
-  return (
-    <header class="searchbar">
-      <form onSubmit={handleSerch}>
+import { Component } from "react";
+
+export default class Searchbar extends Component  {
+  state = {
+    searchQuery: ''
+  }
+
+  handleChange = (event) => {
+    this.setState({searchQuery: event.target.value})
+  }
+
+  handleSerch = (event) => {
+    event.preventDefault()
+    if(this.state.searchQuery.trim() === ''){
+      alert('Поле пошуку порожнє! Введіть данні для пошуку! ');
+      return;
+    } else {
+      this.props.onSubmit(this.state.searchQuery)
+      this.setState({searchQuery: ''})
+    }
+  }
+  render() {
+    return (
+    <header className="searchbar">
+      <form onSubmit={this.handleSerch}>
         <input
-          name="search"
+        id='input'
           type="text"
-          autocomplete="off"
-          autofocus
+          autoComplete="off"
+          autoFocus
           placeholder="Search images and photos"
-          onChange={handleChange}
+          onChange={this.handleChange}
+          value={this.state.searchQuery}
         />
         <button type="submit">
           <span>Search</span>
@@ -16,6 +38,8 @@ export const Searchbar = ({ handleChange, handleSerch }) => {
       </form>
     </header>
   );
+  }
+  
 };
 
-export default Searchbar;
+

@@ -1,12 +1,12 @@
-// import { getAllImeges } from 'api/images';
+
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
-export const ImageGallery = ({ images }) => {
+export const ImageGallery = ({ images, onClickImages }) => {
   return (
     <ul>
-      {images.map(image => (
-        <ImageGalleryItem key={image.id} image={image} />
-      ))}
+     
+        <ImageGalleryItem images={images} onClick={onClickImages} />
+      
     </ul>
   );
 };
