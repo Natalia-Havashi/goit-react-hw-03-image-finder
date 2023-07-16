@@ -1,25 +1,30 @@
+export const Modal = ({ onCloseModal, image }) => {
+  const { largeImageURL, tags } = image;
 
-
-export const Modal = ({modalClose,largeImageURL}) => {
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Escape") {
-     modalClose()
+  const handleKeyDown = event => {
+    if (event.key === 'Escape') {
+      onCloseModal();
     }
   };
 
- const handleOverlayClick = (event) => {
+  const handleOverlayClick = event => {
     if (event.target === event.currentTarget) {
-     modalClose()
+      onCloseModal();
     }
   };
 
   return (
-    <div  onClick={handleOverlayClick}>
+    <div onClick={handleOverlayClick}>
       <div onKeyDown={handleKeyDown}>
-      <img src={largeImageURL} alt='' />
+        <img src={largeImageURL} alt={tags} />
       </div>
     </div>
   );
-}
+};
+
+
+
+
+
+
 

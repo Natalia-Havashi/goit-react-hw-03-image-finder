@@ -7,16 +7,27 @@ axios.defaults.params = {
 };
 
 
-export const getImagesSerch = async (query,page) => {
-  
-  const { data } = await axios.get('', {
-    params: {
-      q:query,
-      page,
-    }
-  });
-  return data;
+export const getImagesSerch = async (query, page) => {
+  try {
+    const { data } = await axios.get('', {
+      params: {
+        q: query,
+        page,
+        per_page: 12, 
+      },
+    });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+
+
+
+
+
+
 
 
 

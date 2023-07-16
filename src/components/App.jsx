@@ -17,27 +17,24 @@ export default class App extends Component {
     modal: null,
   };
 
-  async componentDidUpdate(prevState, prevProps) {
-    if (
-      this.state.query !== prevState.query ||
-      this.state.page !== prevState.page
-    ) {
+  async componentDidUpdate(prevProps, prevState) {
+    const { query, page } = this.state;
+  
+    if (query !== prevState.query || page !== prevState.page) {
       this.setState({ isLoading: true });
+  
       try {
-        const { hits, totalHits } = await getImagesSerch(
-          this.state.query,
-          this.state.page
-        );
+        const { hits, totalHits } = await getImagesSerch(query, page);
         if (hits.length === 0) {
-          alert('По вашому запиту,нічого не знайдено =(');
+          alert('По вашому запиту нічого не знайдено =(');
         }
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
-          loadMore: this.setState.page < Math.ceil(totalHits / 12),
+          loadMore: page < Math.ceil(totalHits / 12),
+          isLoading: false,
         }));
       } catch (error) {
         console.log(error);
-      } finally {
         this.setState({ isLoading: false });
       }
     }
@@ -51,8 +48,8 @@ export default class App extends Component {
       }
     });
   };
-  modalOpen = (largeImageURL, id) => {
-    this.setState({ modal: { largeImageURL, id }, modalVisible: true });
+  modalOpen = (largeImageURL, tags) => {
+    this.setState({ modal: { largeImageURL, tags }, modalVisible: true });
   };
   modalClose = () => {
     this.setState({ modalVisible: false, modal: null });
@@ -70,7 +67,7 @@ export default class App extends Component {
         {this.state.images && (
           <ImageGallery
             images={this.state.images}
-            onClickImages={this.state.modalOpen}
+            onClickImages={this.modalOpen}
           />
         )}
         {this.state.isLoading && <Loader />}
