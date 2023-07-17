@@ -13,8 +13,7 @@ export default class App extends Component {
     page: 1,
     isLoading: false,
     modalVisible: false,
-    loadMore: false,
-    modal: null,
+    selectedImage: null
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -24,14 +23,13 @@ export default class App extends Component {
       this.setState({ isLoading: true });
   
       try {
-        const { hits, totalHits } = await getImagesSerch(query, page);
-        if (hits.length === 0) {
-          alert('По вашому запиту нічого не знайдено =(');
-        }
-        this.setState(prevState => ({
+        const data = await getImagesSerch(query, page);
+        const {hits, totalHits} = data;
+        this.setState((prevState) => ({
           images: [...prevState.images, ...hits],
-          loadMore: page < Math.ceil(totalHits / 12),
           isLoading: false,
+          loadMore: page < Math.ceil(totalHits / 12),
+          
         }));
       } catch (error) {
         console.log(error);
@@ -39,41 +37,34 @@ export default class App extends Component {
       }
     }
   }
-  onSubmitForm = query => {
-    this.setState(prevState => {
-      if (prevState.query === query) {
-        return null;
-      } else {
-        return { query, images: [], page: 1 };
-      }
-    });
+  onSubmitForm = (query) => {
+   this.setState({query, images: [], page: 1});
   };
-  modalOpen = (largeImageURL, tags) => {
-    this.setState({ modal: { largeImageURL, tags }, modalVisible: true });
-  };
+ 
   modalClose = () => {
-    this.setState({ modalVisible: false, modal: null });
+    this.setState({ modalVisible: false});
   };
 
   clickLoadMore = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       page: prevState.page + 1,
     }));
   };
+
+  handleImageClick = (selectedImage) => {
+    this.setState({selectedImage, modalVisible:true})
+  };
   render() {
+    const {images, isLoading, loadMore, modalVisible, selectedImage} = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.onSubmitForm} />
-        {this.state.images && (
-          <ImageGallery
-            images={this.state.images}
-            onClickImages={this.modalOpen}
-          />
-        )}
-        {this.state.isLoading && <Loader />}
-        {this.state.loadMore && <Button loadMore={this.clickLoadMore} />}
-        {this.state.modalVisible && (
-          <Modal modal={this.state.modal} modalClose={this.modalClose} />
+        <ImageGallery images={images} onClick={this.handleImageClick}/>
+      
+        {isLoading && <Loader />}
+        {loadMore && <Button onClick={this.clickLoadMore} />}
+        {modalVisible && (
+          <Modal image={selectedImage} onClose={this.modalClose} />
         )}
       </div>
     );

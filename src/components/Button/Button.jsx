@@ -1,10 +1,10 @@
-export const Button = ({loadMore}) => {
-    return (
-        <div>
-             <button
-        type="button" 
-        onClick={loadMore}>Load More</button>
-        </div>
-       
-    )
-}
+import '../../styles.css';
+export const Button = ({ onClick }) => {
+  return (
+    <div className='Container-button'>
+      <button className="Button" onClick={onClick}>
+        Load More
+      </button>
+    </div>
+  );
+};

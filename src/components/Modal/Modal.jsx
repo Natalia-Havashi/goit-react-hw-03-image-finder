@@ -1,25 +1,37 @@
-export const Modal = ({ onCloseModal, image }) => {
-  const { largeImageURL, tags } = image;
+import { Component } from "react";
+import '../../styles.css'
 
-  const handleKeyDown = event => {
-    if (event.key === 'Escape') {
-      onCloseModal();
+export class Modal extends Component {
+ componentDidMount() {
+  window.addEventListener('keydown', this.handleKeyDown);
+ }
+
+ componentWillUnmount() {
+  window.removeEventListener('keydown',this.handleKeyDown)
+ }
+
+  handleKeyDown = (event) => {
+    if (event.code === 'Escape') {
+      this.props.onClose()
     }
   };
 
-  const handleOverlayClick = event => {
+  handleOverlayClick = (event) => {
     if (event.target === event.currentTarget) {
-      onCloseModal();
+      this.props.onClose()
     }
   };
-
-  return (
-    <div onClick={handleOverlayClick}>
-      <div onKeyDown={handleKeyDown}>
-        <img src={largeImageURL} alt={tags} />
+render() {
+  const {image} = this.props;
+   return (
+    <div className="Overlay" onClick={this.handleOverlayClick}>
+      <div className="Modal">
+        <img src={image.largeImageURL} alt={image.tags} />
       </div>
     </div>
   );
+}
+ 
 };
 
 

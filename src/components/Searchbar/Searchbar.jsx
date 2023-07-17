@@ -1,45 +1,51 @@
-import { Component } from "react";
+import { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../../styles.css'
 
-export default class Searchbar extends Component  {
+export default class Searchbar extends Component {
   state = {
-    searchQuery: ''
-  }
+    query: '',
+  };
 
-  handleChange = (event) => {
-    this.setState({searchQuery: event.target.value})
-  }
+  handleChange = event => {
+    this.setState({ query: event.target.value });
+  };
 
-  handleSerch = (event) => {
-    event.preventDefault()
-    if(this.state.searchQuery.trim() === ''){
-      alert('Поле пошуку порожнє! Введіть данні для пошуку! ');
-      return;
+  handleSerch = event => {
+    event.preventDefault();
+    const { query } = this.state;
+    const { onSubmit } = this.props;
+
+    if (query.trim() !== '') {
+      onSubmit(query.trim());
     } else {
-      this.props.onSubmit(this.state.searchQuery)
-      this.setState({searchQuery: ''})
+      toast.error('Поле пошуку порожнє, введіть значення пошуку! ');
     }
-  }
+  };
   render() {
+    const { query } = this.state;
     return (
-    <header className="searchbar">
-      <form onSubmit={this.handleSerch}>
-        <input
-        id='input'
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          onChange={this.handleChange}
-          value={this.state.searchQuery}
-        />
-        <button type="submit">
-          <span>Search</span>
-        </button>
-      </form>
-    </header>
-  );
+      <header className="Searchbar">
+        <ToastContainer />
+        <form className='SearchForm' onSubmit={this.handleSerch}>
+          <input
+          className='SearchForm-input'
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            onChange={this.handleChange}
+            value={query}
+          />
+          <button className='SearchForm-button' type="submit">
+            <span className='SearchForm-button-label'>Search</span>
+          </button>
+        </form>
+      </header>
+    );
   }
-  
-};
+}
+
 
 
