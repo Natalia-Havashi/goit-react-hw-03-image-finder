@@ -1,8 +1,9 @@
 import { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../styles.css'
+import '../../styles.css';
 import { MdImageSearch } from 'react-icons/md';
+import PropTypes from 'prop-types';
 
 export default class Searchbar extends Component {
   state = {
@@ -30,9 +31,9 @@ export default class Searchbar extends Component {
     return (
       <header className="Searchbar">
         <ToastContainer />
-        <form className='SearchForm' onSubmit={this.handleSerch}>
+        <form className="SearchForm" onSubmit={this.handleSerch}>
           <input
-          className='SearchForm-input'
+            className="SearchForm-input"
             type="text"
             autoComplete="off"
             autoFocus
@@ -40,8 +41,8 @@ export default class Searchbar extends Component {
             onChange={this.handleChange}
             value={query}
           />
-          <button className='SearchForm-button' type="submit">
-            <span className='SearchForm-button-label'>Search</span>
+          <button className="SearchForm-button" type="submit">
+            <span className="SearchForm-button-label">Search</span>
             <MdImageSearch size={30} color="blue" />
           </button>
         </form>
@@ -50,5 +51,6 @@ export default class Searchbar extends Component {
   }
 }
 
-
-
+Searchbar.propTyped = {
+  onSubmit: PropTypes.func.isRequired,
+};

@@ -13,23 +13,22 @@ export default class App extends Component {
     page: 1,
     isLoading: false,
     modalVisible: false,
-    selectedImage: null
+    selectedImage: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
-  
+
     if (query !== prevState.query || page !== prevState.page) {
       this.setState({ isLoading: true });
-  
+
       try {
         const data = await getImagesSerch(query, page);
-        const {hits, totalHits} = data;
-        this.setState((prevState) => ({
+        const { hits, totalHits } = data;
+        this.setState(prevState => ({
           images: [...prevState.images, ...hits],
           isLoading: false,
           loadMore: page < Math.ceil(totalHits / 12),
-          
         }));
       } catch (error) {
         console.log(error);
@@ -37,33 +36,32 @@ export default class App extends Component {
       }
     }
   }
-  onSubmitForm = (query) => {
-   this.setState({query, images: [], page: 1});
-   
+  onSubmitForm = query => {
+    this.setState({ query, images: [], page: 1 });
   };
- 
+
   modalClose = () => {
-    this.setState({ modalVisible: false});
+    this.setState({ modalVisible: false });
   };
 
   clickLoadMore = () => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       page: prevState.page + 1,
     }));
   };
 
-  handleImageClick = (selectedImage) => {
-    this.setState({selectedImage, modalVisible:true})
+  handleImageClick = selectedImage => {
+    this.setState({ selectedImage, modalVisible: true });
   };
   render() {
-    
-    const {images, isLoading, loadMore, modalVisible, selectedImage} = this.state;
+    const { images, isLoading, loadMore, modalVisible, selectedImage } =
+      this.state;
     const showButton = images.length > 0;
     return (
       <div>
         <Searchbar onSubmit={this.onSubmitForm} />
-        <ImageGallery images={images} onClick={this.handleImageClick}/>
-      
+        <ImageGallery images={images} onClick={this.handleImageClick} />
+
         {isLoading && <Loader />}
         {showButton && loadMore && <Button onClick={this.clickLoadMore} />}
         {modalVisible && (
