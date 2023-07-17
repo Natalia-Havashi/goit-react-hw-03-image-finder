@@ -39,6 +39,7 @@ export default class App extends Component {
   }
   onSubmitForm = (query) => {
    this.setState({query, images: [], page: 1});
+   
   };
  
   modalClose = () => {
@@ -55,14 +56,16 @@ export default class App extends Component {
     this.setState({selectedImage, modalVisible:true})
   };
   render() {
+    
     const {images, isLoading, loadMore, modalVisible, selectedImage} = this.state;
+    const showButton = images.length > 0;
     return (
       <div>
         <Searchbar onSubmit={this.onSubmitForm} />
         <ImageGallery images={images} onClick={this.handleImageClick}/>
       
         {isLoading && <Loader />}
-        {loadMore && <Button onClick={this.clickLoadMore} />}
+        {showButton && loadMore && <Button onClick={this.clickLoadMore} />}
         {modalVisible && (
           <Modal image={selectedImage} onClose={this.modalClose} />
         )}

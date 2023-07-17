@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../styles.css'
+import { MdImageSearch } from 'react-icons/md';
 
 export default class Searchbar extends Component {
   state = {
@@ -19,6 +20,7 @@ export default class Searchbar extends Component {
 
     if (query.trim() !== '') {
       onSubmit(query.trim());
+      this.setState({ query: '' });
     } else {
       toast.error('Поле пошуку порожнє, введіть значення пошуку! ');
     }
@@ -40,6 +42,7 @@ export default class Searchbar extends Component {
           />
           <button className='SearchForm-button' type="submit">
             <span className='SearchForm-button-label'>Search</span>
+            <MdImageSearch size={30} color="blue" />
           </button>
         </form>
       </header>
